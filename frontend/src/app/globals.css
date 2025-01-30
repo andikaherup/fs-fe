@@ -1,4 +1,4 @@
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --foreground-rgb: 0, 0, 0;
@@ -25,4 +25,8 @@ select {
 /* Button hover effects */
 .hover\:shadow-hover:hover {
   @apply transform transition-all duration-200 hover:-translate-y-0.5;
+}
+
+@theme {
+  --color-mint-500: oklch(0.72 0.11 178);
 }
