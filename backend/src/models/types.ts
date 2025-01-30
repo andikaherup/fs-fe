@@ -1,26 +1,15 @@
-import { ObjectType, Field, ID, registerEnumType } from 'type-graphql';
-
-export enum Status {
-    OPEN = 'OPEN',
-    RESOLVED = 'RESOLVED'
-}
-
-export enum Urgency {
-    NONE_URGENT = 'NONE_URGENT',
-    LESS_URGENT = 'LESS_URGENT',
-    URGENT = 'URGENT',
-    EMERGENCY = 'EMERGENCY'
-}
+import { ObjectType, Field, ID, registerEnumType, InputType } from 'type-graphql';
+import { Status, Urgency } from '@prisma/client';
 
 // Register the enums for GraphQL
 registerEnumType(Status, {
     name: 'Status',
-    description: 'Status of the maintenance request',
+    description: 'The status of a maintenance request',
 });
 
 registerEnumType(Urgency, {
     name: 'Urgency',
-    description: 'Urgency level of the maintenance request',
+    description: 'The urgency level of a maintenance request',
 });
 
 @ObjectType()
@@ -48,6 +37,18 @@ export class MaintenanceRequest {
 
     @Field()
     updatedAt!: Date;
+}
+
+@InputType()
+export class CreateMaintenanceInput {
+    @Field()
+    title!: string;
+
+    @Field()
+    description!: string;
+
+    @Field(() => Urgency)
+    urgency!: Urgency;
 }
 
 @ObjectType()

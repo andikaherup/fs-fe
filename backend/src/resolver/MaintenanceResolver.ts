@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
-import { MaintenanceRequest, Metrics } from '../models/types';
+import { MaintenanceRequest, Metrics, CreateMaintenanceInput } from '../models/types';
 import { PrismaClient, Status, Urgency } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
 
@@ -47,16 +47,14 @@ export class MaintenanceResolver {
 
     @Mutation(() => MaintenanceRequest)
     async createRequest(
-        @Arg('title') title: string,
-        @Arg('description') description: string,
-        @Arg('urgency', () => Urgency) urgency: Urgency,
+        @Arg('input') input: CreateMaintenanceInput,
         @Ctx() { prisma, pubsub }: Context
     ) {
         const newRequest = await prisma.maintenanceRequest.create({
             data: {
-                title,
-                description,
-                urgency
+                title: input.title,
+                description: input.description,
+                urgency: input.urgency
             }
         });
 
