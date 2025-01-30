@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -8,14 +11,14 @@ generator client {
 }
 
 model MaintenanceRequest {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String
-  status      Status   @default(OPEN)
-  urgency     Urgency  @default(NONE_URGENT)
-  createdAt   DateTime @default(now())
+  status      Status    @default(OPEN)
+  urgency     Urgency   @default(NONE_URGENT)
+  createdAt   DateTime  @default(now())
   resolvedAt  DateTime?
-  updatedAt   DateTime @updatedAt
+  updatedAt   DateTime  @updatedAt
 
   @@index([status])
   @@index([urgency])

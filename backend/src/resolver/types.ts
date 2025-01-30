@@ -1,19 +1,18 @@
 import { ObjectType, Field, ID, registerEnumType } from 'type-graphql';
-import { Status, Urgency } from '@prisma/client';
+import { Prisma, Status, Urgency } from '@prisma/client';
 
-// Register Prisma's enums for GraphQL
 registerEnumType(Status, {
     name: 'Status',
-    description: 'Status of the maintenance request',
+    description: 'The status of a maintenance request',
 });
 
 registerEnumType(Urgency, {
     name: 'Urgency',
-    description: 'Urgency level of the maintenance request',
+    description: 'The urgency level of a maintenance request',
 });
 
 @ObjectType()
-export class MaintenanceRequest {
+export class MaintenanceRequest implements Prisma.MaintenanceRequestUncheckedCreateInput {
     @Field(() => ID)
     id!: string;
 
@@ -23,10 +22,10 @@ export class MaintenanceRequest {
     @Field()
     description!: string;
 
-    @Field(() => Status)
+    @Field(() => String)
     status!: Status;
 
-    @Field(() => Urgency)
+    @Field(() => String)
     urgency!: Urgency;
 
     @Field()

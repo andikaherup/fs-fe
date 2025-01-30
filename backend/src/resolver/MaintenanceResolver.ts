@@ -1,19 +1,18 @@
 import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
 import { MaintenanceRequest, Metrics } from '../models/types';
-import { Status, Urgency } from '@prisma/client';
+import { PrismaClient, Status, Urgency } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
-import { PrismaClient } from '@prisma/client';
 
 interface Context {
     prisma: PrismaClient;
     pubsub: PubSub;
 }
 
-@Resolver()
+@Resolver(MaintenanceRequest)
 export class MaintenanceResolver {
     @Query(() => [MaintenanceRequest])
-    async maintenanceRequests(@Ctx() { prisma }: Context): Promise<MaintenanceRequest[]> {
-        return prisma.maintenanceRequest.findMany({
+    async maintenanceRequests(@Ctx() { prisma }: Context) {
+        return await prisma.maintenanceRequest.findMany({
             orderBy: { createdAt: 'desc' }
         });
     }
@@ -52,7 +51,7 @@ export class MaintenanceResolver {
         @Arg('description') description: string,
         @Arg('urgency', () => Urgency) urgency: Urgency,
         @Ctx() { prisma, pubsub }: Context
-    ): Promise<MaintenanceRequest> {
+    ) {
         const newRequest = await prisma.maintenanceRequest.create({
             data: {
                 title,
@@ -70,7 +69,7 @@ export class MaintenanceResolver {
     async resolveRequest(
         @Arg('id') id: string,
         @Ctx() { prisma, pubsub }: Context
-    ): Promise<MaintenanceRequest> {
+    ) {
         const updatedRequest = await prisma.maintenanceRequest.update({
             where: { id },
             data: {
