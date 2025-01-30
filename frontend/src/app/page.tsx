@@ -69,9 +69,9 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8 bg-amber-300">
       <h1 className="text-xl font-medium mb-6">Maintenance Request</h1>
-
+      <h1 className="text-3xl font-bold underline">Hello world!</h1>
       {metricsData && <MetricsPanel {...metricsData.metrics} />}
 
       {requestsData && (

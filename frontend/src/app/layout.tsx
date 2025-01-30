@@ -2,7 +2,7 @@
 
 import { ApolloProvider } from "@apollo/client";
 import apolloClient from "@/lib/apolloClient";
-import "./globals.css";
+import "@/app/globals.css";
 import { Inter } from "next/font/google";
 
 const inter = Inter({ subsets: ["latin"] });
