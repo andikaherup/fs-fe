@@ -10,7 +10,6 @@ export const GET_MAINTENANCE_REQUESTS = gql`
       urgency
       createdAt
       resolvedAt
-      updatedAt
     }
   }
 `;
