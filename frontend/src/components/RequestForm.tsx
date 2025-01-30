@@ -1,37 +1,27 @@
-import { useMutation } from "@apollo/client";
-import {
-  CREATE_REQUEST,
-  GET_MAINTENANCE_REQUESTS,
-  GET_METRICS,
-} from "@/graphql/queries";
-import { Urgency } from "@/types";
 import { useState } from "react";
 
 interface CreateRequestFormProps {
+  onSubmit: (data: {
+    title: string;
+    description: string;
+    urgency: string;
+  }) => void;
   onClose: () => void;
 }
 
-export default function CreateRequestForm({ onClose }: CreateRequestFormProps) {
+export default function CreateRequestForm({
+  onSubmit,
+  onClose,
+}: CreateRequestFormProps) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    urgency: Urgency.NONE_URGENT,
+    urgency: "NONE_URGENT",
   });
 
-  const [createRequest] = useMutation(CREATE_REQUEST, {
-    refetchQueries: [GET_MAINTENANCE_REQUESTS, GET_METRICS],
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      await createRequest({
-        variables: formData,
-      });
-      onClose();
-    } catch (error) {
-      console.error("Error creating request:", error);
-    }
+    onSubmit(formData);
   };
 
   return (
@@ -54,15 +44,15 @@ export default function CreateRequestForm({ onClose }: CreateRequestFormProps) {
           <select
             value={formData.urgency}
             onChange={(e) =>
-              setFormData({ ...formData, urgency: e.target.value as Urgency })
+              setFormData({ ...formData, urgency: e.target.value })
             }
             className="w-full p-2 border border-gray-300 rounded-md"
+            required
           >
-            {Object.values(Urgency).map((urgency) => (
-              <option key={urgency} value={urgency}>
-                {urgency.replace("_", " ")}
-              </option>
-            ))}
+            <option value="NONE_URGENT">None Urgent</option>
+            <option value="LESS_URGENT">Less Urgent</option>
+            <option value="URGENT">Urgent</option>
+            <option value="EMERGENCY">Emergency</option>
           </select>
         </div>
 
@@ -96,7 +86,7 @@ export default function CreateRequestForm({ onClose }: CreateRequestFormProps) {
 
         <button
           type="submit"
-          className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600"
+          className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
         >
           Save
         </button>

@@ -25,8 +25,8 @@ export const GET_METRICS = gql`
 `;
 
 export const CREATE_REQUEST = gql`
-  mutation CreateRequest($title: String!, $description: String!, $urgency: Urgency!) {
-    createRequest(title: $title, description: $description, urgency: $urgency) {
+  mutation CreateRequest($input: CreateMaintenanceInput!) {
+    createRequest(input: $input) {
       id
       title
       status

@@ -1,107 +1,81 @@
-import { useQuery, useMutation } from "@apollo/client";
-import {
-  GET_MAINTENANCE_REQUESTS,
-  GET_METRICS,
-  RESOLVE_REQUEST,
-} from "@/graphql/queries";
 import { format } from "date-fns";
-import { MaintenanceRequest, Urgency } from "@/types";
 
-interface RequestListProps {
-  onAddNew: () => void;
+type UrgencyType = "NONE_URGENT" | "LESS_URGENT" | "URGENT" | "EMERGENCY";
+type StatusType = "OPEN" | "RESOLVED";
+
+interface Request {
+  id: string;
+  title: string;
+  description: string;
+  status: StatusType;
+  urgency: UrgencyType;
+  createdAt: string;
+  resolvedAt?: string | null;
 }
 
-export default function RequestList({ onAddNew }: RequestListProps) {
-  const { data: requestsData } = useQuery(GET_MAINTENANCE_REQUESTS);
-  const { data: metricsData } = useQuery(GET_METRICS);
-  const [resolveRequest] = useMutation(RESOLVE_REQUEST, {
-    refetchQueries: [GET_MAINTENANCE_REQUESTS, GET_METRICS],
-  });
+interface RequestListProps {
+  requests: Request[];
+  onResolve: (id: string) => void;
+}
 
-  const metrics = metricsData?.metrics || {
-    openRequests: 0,
-    urgentRequests: 0,
-    averageResolutionTime: 0,
+const UrgencyBadge = ({ urgency }: { urgency: UrgencyType }) => {
+  const colors = {
+    NONE_URGENT: "bg-gray-100 text-gray-800",
+    LESS_URGENT: "bg-blue-100 text-blue-800",
+    URGENT: "bg-yellow-100 text-yellow-800",
+    EMERGENCY: "bg-red-100 text-red-800",
   };
 
-  const UrgencyIndicator = ({ urgency }: { urgency: Urgency }) => {
-    const colors = {
-      [Urgency.NONE_URGENT]: "text-gray-500",
-      [Urgency.LESS_URGENT]: "text-blue-500",
-      [Urgency.URGENT]: "text-yellow-500",
-      [Urgency.EMERGENCY]: "text-red-500",
-    };
-
-    const icons = {
-      [Urgency.NONE_URGENT]: "⚪",
-      [Urgency.LESS_URGENT]: "🔵",
-      [Urgency.URGENT]: "⚠️",
-      [Urgency.EMERGENCY]: "🔴",
-    };
-
-    return (
-      <span className={`flex items-center ${colors[urgency]}`}>
-        {icons[urgency]} {urgency.replace("_", " ").toLowerCase()}
-      </span>
-    );
+  const icon = {
+    NONE_URGENT: "⚪",
+    LESS_URGENT: "🔵",
+    URGENT: "⚠️",
+    EMERGENCY: "🔴",
   };
-
-  const MetricCard = ({ value, label }: { value: number; label: string }) => (
-    <div className="bg-white rounded-full h-24 w-24 flex flex-col items-center justify-center shadow">
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="text-xs text-gray-500 text-center">{label}</div>
-    </div>
-  );
 
   return (
-    <div>
-      <h1 className="text-xl font-medium mb-6">Maintenance Request</h1>
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[urgency]}`}
+    >
+      <span className="mr-1">{icon[urgency]}</span>
+      {urgency.replace("_", " ").toLowerCase()}
+    </span>
+  );
+};
 
-      <div className="flex justify-center gap-4 mb-8">
-        <MetricCard value={metrics.openRequests} label="Open Requests" />
-        <MetricCard value={metrics.urgentRequests} label="Urgent Requests" />
-        <MetricCard
-          value={Math.round(metrics.averageResolutionTime)}
-          label="Avg. Hours to Solve"
-        />
-      </div>
-
-      <div className="space-y-4">
-        {requestsData?.maintenanceRequests.map(
-          (request: MaintenanceRequest) => (
-            <div key={request.id} className="bg-white rounded-lg p-4 shadow-sm">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="font-medium">{request.title}</h3>
-                  <UrgencyIndicator urgency={request.urgency} />
-                </div>
-                <div className="text-right">
-                  <div className="text-sm text-gray-500">
-                    {format(new Date(request.createdAt), "dd MMM yyyy")}
-                  </div>
-                  {request.status === "OPEN" && (
-                    <button
-                      onClick={() =>
-                        resolveRequest({ variables: { id: request.id } })
-                      }
-                      className="mt-2 px-4 py-1 bg-green-500 text-white text-sm rounded-full hover:bg-green-600"
-                    >
-                      Mark as Resolved
-                    </button>
-                  )}
-                </div>
+export default function RequestList({ requests, onResolve }: RequestListProps) {
+  return (
+    <div className="space-y-4">
+      {requests.map((request) => (
+        <div key={request.id} className="bg-white rounded-lg p-4 shadow-sm">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-lg font-medium text-gray-900">
+                {request.title}
+              </h3>
+              <p className="text-sm text-gray-500 mt-1">
+                {request.description}
+              </p>
+              <div className="mt-2">
+                <UrgencyBadge urgency={request.urgency} />
               </div>
             </div>
-          )
-        )}
-      </div>
-
-      <button
-        onClick={onAddNew}
-        className="fixed bottom-6 right-6 w-12 h-12 bg-green-500 text-white rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-green-600"
-      >
-        +
-      </button>
+            <div className="text-right">
+              <p className="text-sm text-gray-500">
+                {format(new Date(request.createdAt), "dd MMM yyyy")}
+              </p>
+              {request.status === "OPEN" && (
+                <button
+                  onClick={() => onResolve(request.id)}
+                  className="mt-2 px-4 py-1 bg-green-500 text-white text-sm rounded-full hover:bg-green-600 transition-colors"
+                >
+                  Mark as Resolved
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
