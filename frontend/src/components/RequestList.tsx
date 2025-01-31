@@ -20,25 +20,27 @@ interface RequestListProps {
 
 const UrgencyBadge = ({ urgency }: { urgency: UrgencyType }) => {
   const colors = {
-    NONE_URGENT: "bg-gray-100 text-gray-800",
-    LESS_URGENT: "bg-blue-100 text-blue-800",
-    URGENT: "bg-yellow-100 text-yellow-800",
-    EMERGENCY: "bg-red-100 text-red-800",
+    NONE_URGENT: "text-(--color-nonurgenttext)",
+    LESS_URGENT: "text-(--color-lessurgenttext)",
+    URGENT: "text-(--color-urgenttext)",
+    EMERGENCY: "text-(--color-emergencytext)",
   };
 
   const icon = {
-    NONE_URGENT: "⚪",
-    LESS_URGENT: "🔵",
-    URGENT: "⚠️",
-    EMERGENCY: "🔴",
+    NONE_URGENT: "🙂",
+    LESS_URGENT: "🔨 ",
+    URGENT: "⚡",
+    EMERGENCY: "🔥",
   };
 
   return (
     <span
-      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${colors[urgency]}`}
+      className={`inline-flex items-center py-0.5 rounded-full text-sm  ${colors[urgency]}`}
     >
-      <span className="mr-1">{icon[urgency]}</span>
-      {urgency.replace("_", " ").toLowerCase()}
+      <span className="mr-1 font-medium">{icon[urgency]}</span>
+      <span className="capitalize font-light text-sm">
+        {urgency.replace("_", " ").toLowerCase()}
+      </span>
     </span>
   );
 };
@@ -47,29 +49,39 @@ export default function RequestList({ requests, onResolve }: RequestListProps) {
   return (
     <div className="space-y-4">
       {requests.map((request) => (
-        <div key={request.id} className="bg-white rounded-lg p-4 shadow-sm">
+        <div
+          key={request.id}
+          className="bg-white rounded-[12px] p-[16px] shadow-md"
+        >
           <div className="flex justify-between items-start">
             <div>
               <h3 className="text-lg font-medium text-gray-900">
                 {request.title}
               </h3>
-              <p className="text-sm text-gray-500 mt-1">
+              {/* <p className="text-sm text-gray-500 mt-1">
                 {request.description}
-              </p>
+              </p> */}
               <div className="mt-2">
                 <UrgencyBadge urgency={request.urgency} />
               </div>
             </div>
             <div className="text-right">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-(--color-graytext)">
                 {format(new Date(request.createdAt), "dd MMM yyyy")}
               </p>
-              {request.status === "OPEN" && (
+              {request.status === "OPEN" ? (
                 <button
                   onClick={() => onResolve(request.id)}
-                  className="mt-2 px-4 py-1 bg-green-500 text-white text-sm rounded-full hover:bg-green-600 transition-colors"
+                  className="mt-4 px-4 py-1 bg-(--color-cendolgreen) text-white text-sm rounded-[100px] hover:bg-green-600 transition-colors"
                 >
                   Mark as Resolved
+                </button>
+              ) : (
+                <button
+                  className="mt-4 px-4 py-1 text-white text-sm bg-(--color-graytext) rounded-[100px] "
+                  disabled
+                >
+                  Resolved
                 </button>
               )}
             </div>

@@ -16,9 +16,13 @@ export default function MetricsPanel({
     value: number | string;
     label: string;
   }) => (
-    <div className="bg-white rounded-full w-24 h-24 flex flex-col items-center justify-center shadow-sm">
-      <div className="text-2xl font-bold">{value}</div>
-      <div className="text-xs text-gray-500 text-center px-2">{label}</div>
+    <div className="bg-white rounded-[10px] w-24 h-24 pt-3 flex flex-col items-center justify-start gap-1 shadow-sm">
+      <div className="text-4xl text-(--color-cendolgreen) font-medium">
+        {value}
+      </div>
+      <div className="text-[9px] text-gray-500 font-normal text-center px-2">
+        {label}
+      </div>
     </div>
   );
 
@@ -27,8 +31,8 @@ export default function MetricsPanel({
       <MetricCircle value={openRequests} label="Open Requests" />
       <MetricCircle value={urgentRequests} label="Urgent Requests" />
       <MetricCircle
-        value={`${averageResolutionTime.toFixed(1)}h`}
-        label="Avg Hours to Solve"
+        value={`${averageResolutionTime.toFixed(0)}`}
+        label="Average time (days) to Solve"
       />
     </div>
   );
