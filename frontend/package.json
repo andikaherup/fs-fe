@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.8",
-    "@tailwindcss/postcss": "^4.0.1",
     "@types/node": "20.10.5",
     "@types/react-dom": "18.2.18",
     "date-fns": "^2.30.0",
@@ -19,15 +18,18 @@
     "mobx-react-lite": "^4.0.5",
     "next": "15.1.0",
     "postcss": "^8.5.1",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "tailwindcss": "^4.0.1",
     "typescript": "5.3.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.8",
+    "@tailwindcss/postcss": "^4.0.0-beta.7",
     "autoprefixer": "^10.4.20",
     "eslint": "8.56.0",
+    "postcss": "^8",
+    "tailwindcss": "^4.0.0-beta.7",
     "eslint-config-next": "14.0.4"
   }
 }
