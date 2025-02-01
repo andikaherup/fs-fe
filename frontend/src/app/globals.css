@@ -9,4 +9,5 @@
   --color-emergencytext: oklch(60.58% 0.1761 24.02);
   --color-lessurgenttext: oklch(57.69% 0.1671 252.64);
   --color-graytext: oklch(74.96% 0.0328 257.25);
+  --color-formtext: oklch(37.15% 0 0);
 }

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { CustomDropdown } from "./Dropdown";
 
 interface CreateRequestFormProps {
   onSubmit: (data: {
@@ -8,6 +9,23 @@ interface CreateRequestFormProps {
   }) => void;
   onClose: () => void;
 }
+
+type DropdownOption = {
+  value: string;
+  label: string;
+};
+
+const urgencyOptions: DropdownOption[] = [
+  { value: "EMERGENCY", label: "Emergency" },
+  { value: "URGENT", label: "Urgent" },
+  { value: "LESS_URGENT", label: "Less Urgent" },
+  { value: "NONE_URGENT", label: "None Urgent" },
+];
+
+const statusOptions: DropdownOption[] = [
+  { value: "OPEN", label: "Open" },
+  { value: "RESOLVED", label: "Resolved" },
+];
 
 export default function CreateRequestForm({
   onSubmit,
@@ -19,45 +37,49 @@ export default function CreateRequestForm({
     urgency: "NONE_URGENT",
   });
 
+  const [selectedValue, setSelectedValue] = useState("EMERGENCY");
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
   };
 
   return (
-    <div className="bg-white rounded-lg p-6">
-      <div className="flex items-center mb-6">
+    <div className="rounded-lg p-6">
+      <div className="flex items-center mb-6 justify-center">
         <button
           onClick={onClose}
           className="text-gray-500 hover:text-gray-700 mr-4"
         >
           ←
         </button>
-        <h1 className="text-xl font-medium">Maintenance Request</h1>
+        <h1 className="text-xl  font-bold">Maintenance Request</h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-light text-(--color-graytext) mb-2">
             Urgency *
           </label>
-          <select
-            value={formData.urgency}
-            onChange={(e) =>
-              setFormData({ ...formData, urgency: e.target.value })
-            }
-            className="w-full p-2 border border-gray-300 rounded-md"
-            required
-          >
-            <option value="NONE_URGENT">None Urgent</option>
-            <option value="LESS_URGENT">Less Urgent</option>
-            <option value="URGENT">Urgent</option>
-            <option value="EMERGENCY">Emergency</option>
-          </select>
+          <CustomDropdown
+            value={selectedValue}
+            onChange={setSelectedValue}
+            options={urgencyOptions}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-light text-(--color-graytext) mb-2">
+            Status
+          </label>
+          <CustomDropdown
+            value={selectedValue}
+            onChange={setSelectedValue}
+            options={statusOptions}
+          />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-light text-(--color-graytext) mb-2">
             Title *
           </label>
           <input
@@ -66,13 +88,13 @@ export default function CreateRequestForm({
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            className="w-full p-2 border border-gray-300 rounded-md"
+            className="w-full h-[52px] px-4 py-[14px] bg-white border border-[#FFFFFF80] rounded-[12px] appearance-none text-gray-700 focus:outline-none focus:border-gray-400"
             required
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-light text-(--color-graytext) mb-2">
             Description
           </label>
           <textarea
@@ -80,16 +102,17 @@ export default function CreateRequestForm({
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
-            className="w-full p-2 border border-gray-300 rounded-md h-32"
+            className="w-full h-[188px] px-4 py-[14px] bg-white border border-[#FFFFFF80] rounded-[12px] appearance-none text-gray-700 focus:outline-none focus:border-gray-400"
           />
         </div>
-
-        <button
-          type="submit"
-          className="w-full py-2 px-4 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
-        >
-          Save
-        </button>
+        <div className="w-full flex justify-center">
+          <button
+            type="submit"
+            className="w-[40%] py-2 px-4 bg-(--color-cendolgreen) text-white text-lg rounded-md hover:bg-green-600 transition-colors"
+          >
+            Save
+          </button>
+        </div>
       </form>
     </div>
   );

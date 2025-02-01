@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
+import { Resolver, Query, Mutation, Arg, Ctx, Subscription, Root } from 'type-graphql';
 import { MaintenanceRequest, Metrics, CreateMaintenanceInput } from '../models/types';
 import { PrismaClient, Status, Urgency } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
@@ -79,5 +79,14 @@ export class MaintenanceResolver {
         await pubsub.publish('MAINTENANCE_UPDATED', { maintenanceUpdated: updatedRequest });
 
         return updatedRequest;
+    }
+
+    @Subscription(() => MaintenanceRequest, {
+        topics: 'MAINTENANCE_UPDATED'
+    })
+    maintenanceUpdated(
+        @Root() payload: MaintenanceRequest
+    ): MaintenanceRequest {
+        return payload;
     }
 }

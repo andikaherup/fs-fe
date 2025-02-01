@@ -59,7 +59,7 @@ export default function Home() {
 
   if (isCreating) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto px-4 py-8 max-w-[600px]">
         <CreateRequestForm
           onSubmit={handleCreate}
           onClose={() => setIsCreating(false)}
