@@ -11,6 +11,8 @@ import { useServer } from 'graphql-ws/lib/use/ws';
 import { MaintenanceResolver } from './resolver/MaintenanceResolver';
 import cors from 'cors';
 import { PubSub } from 'graphql-subscriptions';
+import { UrgencyService } from './services/UrgencyServices';
+import { Container } from 'typedi';
 
 interface Context {
     req: Request;
@@ -26,18 +28,34 @@ async function bootstrap() {
     const prisma = new PrismaClient();
     const pubsub = new PubSub();
 
+    // Set up DI container
+    Container.set(PrismaClient, prisma);
+    Container.set(PubSub, pubsub);
+    Container.set('PUBSUB_INSTANCE', pubsub);
+
+    const urgencyService = new UrgencyService(prisma, pubsub);
+
     const schema = await buildSchema({
         resolvers: [MaintenanceResolver],
         validate: false,
+        container: Container,
+        pubSub: {
+            publish: async (topic: string, payload: any) => {
+                return pubsub.publish(topic, payload);
+            },
+            subscribe: (topic: string): AsyncIterable<unknown> => {
+                return {
+                    [Symbol.asyncIterator]: () => pubsub.asyncIterator(topic)
+                };
+            }
+        }
     });
 
-    // Create WebSocket server
     const wsServer = new WebSocketServer({
         server: httpServer,
         path: '/graphql',
     });
 
-    // WebSocket server cleanup
     const serverCleanup = useServer({
         schema,
         context: () => ({ prisma, pubsub }),
@@ -46,9 +64,7 @@ async function bootstrap() {
     const server = new ApolloServer<Context>({
         schema,
         plugins: [
-            // Proper shutdown for the HTTP server.
             ApolloServerPluginDrainHttpServer({ httpServer }),
-            // Proper shutdown for the WebSocket server.
             {
                 async serverWillStart() {
                     return {
@@ -76,6 +92,12 @@ async function bootstrap() {
             }),
         }),
     );
+
+    process.on('SIGINT', async () => {
+        urgencyService.stop();
+        await prisma.$disconnect();
+        process.exit(0);
+    });
 
     const PORT = process.env.PORT || 4000;
     httpServer.listen(PORT, () => {

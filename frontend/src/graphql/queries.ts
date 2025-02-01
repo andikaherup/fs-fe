@@ -35,6 +35,20 @@ export const CREATE_REQUEST = gql`
   }
 `;
 
+
+export const UPDATE_REQUEST = gql`
+  mutation UpdateRequest($id: String!, $input: CreateMaintenanceInput!) {
+    updateRequest(id: $id, input: $input) {
+      id
+      title
+      description
+      status
+      urgency
+      createdAt
+      resolvedAt
+  }
+}`
+
 export const RESOLVE_REQUEST = gql`
   mutation ResolveRequest($id: String!) {
     resolveRequest(id: $id) {

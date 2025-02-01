@@ -2,6 +2,12 @@ import { useState } from "react";
 import { CustomDropdown } from "./Dropdown";
 
 interface CreateRequestFormProps {
+  initialData?: {
+    id?: string;
+    title: string;
+    description: string;
+    urgency: string;
+  };
   onSubmit: (data: {
     title: string;
     description: string;
@@ -28,14 +34,17 @@ const statusOptions: DropdownOption[] = [
 ];
 
 export default function CreateRequestForm({
+  initialData,
   onSubmit,
   onClose,
 }: CreateRequestFormProps) {
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    urgency: "NONE_URGENT",
+    title: initialData?.title || "",
+    description: initialData?.description || "",
+    urgency: initialData?.urgency || "NONE_URGENT",
   });
+
+  const isEditing = !!initialData;
 
   const [selectedValue, setSelectedValue] = useState("EMERGENCY");
 
@@ -53,7 +62,10 @@ export default function CreateRequestForm({
         >
           ←
         </button>
-        <h1 className="text-xl  font-bold">Maintenance Request</h1>
+        <h1 className="text-xl  font-bold">
+          {" "}
+          {isEditing ? "Edit Maintenance Request" : "New Maintenance Request"}
+        </h1>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">

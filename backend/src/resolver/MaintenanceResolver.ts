@@ -2,14 +2,23 @@ import { Resolver, Query, Mutation, Arg, Ctx, Subscription, Root } from 'type-gr
 import { MaintenanceRequest, Metrics, CreateMaintenanceInput } from '../models/types';
 import { PrismaClient, Status, Urgency } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
+import { Service } from 'typedi';
+import { Inject } from 'typedi';
+
 
 interface Context {
     prisma: PrismaClient;
     pubsub: PubSub;
 }
 
+@Service()
 @Resolver(MaintenanceRequest)
 export class MaintenanceResolver {
+    constructor(
+        @Inject() private readonly prisma: PrismaClient,
+        @Inject() private readonly pubsub: PubSub
+    ) { }
+
     @Query(() => [MaintenanceRequest])
     async maintenanceRequests(@Ctx() { prisma }: Context) {
         return await prisma.maintenanceRequest.findMany({

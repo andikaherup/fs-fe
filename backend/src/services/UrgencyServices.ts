@@ -2,7 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
 
 export class UrgencyService {
-    private checkInterval: NodeJS.Timer;
+    private checkInterval: NodeJS.Timeout;
 
     constructor(
         private prisma: PrismaClient,
@@ -10,6 +10,7 @@ export class UrgencyService {
     ) {
         // Check every minute for changes
         this.checkInterval = setInterval(() => {
+            console.log("checking,,,")
             this.checkUrgencies();
         }, 1000 * 60); // Every minute
     }

@@ -19,6 +19,7 @@
     "graphql-ws": "^5.14.3",
     "reflect-metadata": "^0.2.1",
     "type-graphql": "^2.0.0-rc.2",
+    "typedi": "^0.10.0",
     "ws": "^8.16.0"
   },
   "devDependencies": {

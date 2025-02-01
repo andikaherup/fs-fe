@@ -16,6 +16,7 @@ interface Request {
 interface RequestListProps {
   requests: Request[];
   onResolve: (id: string) => void;
+  onEdit: (request: Request) => void;
 }
 
 const UrgencyBadge = ({ urgency }: { urgency: UrgencyType }) => {
