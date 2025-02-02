@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/client"
+}
+
+model MaintenanceRequest {
+  id          String    @id @default(uuid())
+  title       String
+  description String
+  status      Status    @default(OPEN)
+  urgency     Urgency   @default(NONE_URGENT)
+  createdAt   DateTime  @default(now())
+  resolvedAt  DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@index([status])
+  @@index([urgency])
+}
+
+enum Status {
+  OPEN
+  RESOLVED
+}
+
+enum Urgency {
+  NONE_URGENT
+  LESS_URGENT
+  URGENT
+  EMERGENCY
+}

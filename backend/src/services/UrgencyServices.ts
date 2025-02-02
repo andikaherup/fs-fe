@@ -1,4 +1,5 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../../prisma/generated/client';
+
 import { PubSub } from 'graphql-subscriptions';
 
 export class UrgencyService {

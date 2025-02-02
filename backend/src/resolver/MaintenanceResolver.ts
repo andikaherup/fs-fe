@@ -1,9 +1,9 @@
 import { Resolver, Query, Mutation, Arg, Ctx, Subscription, Root } from 'type-graphql';
-import { MaintenanceRequest, Metrics, CreateMaintenanceInput, UpdateMaintenanceInput } from '../models/types';
-import { PrismaClient, Status, Urgency } from '@prisma/client';
+import { MaintenanceRequest, Metrics, CreateMaintenanceInput, UpdateMaintenanceInput, RequestType } from '../models/types';
+import { PrismaClient } from "../../prisma/generated/client";
 import { PubSub } from 'graphql-subscriptions';
-import { Service } from 'typedi';
-import { Inject } from 'typedi';
+import { Service, Inject } from 'typedi';
+
 
 
 interface Context {
@@ -14,10 +14,6 @@ interface Context {
 @Service()
 @Resolver(MaintenanceRequest)
 export class MaintenanceResolver {
-    constructor(
-        @Inject() private readonly prisma: PrismaClient,
-        @Inject() private readonly pubsub: PubSub
-    ) { }
 
     @Query(() => [MaintenanceRequest])
     async maintenanceRequests(@Ctx() { prisma }: Context) {
@@ -30,14 +26,14 @@ export class MaintenanceResolver {
     async metrics(@Ctx() { prisma }: Context): Promise<Metrics> {
         const requests = await prisma.maintenanceRequest.findMany();
 
-        const openRequests = requests.filter(r => r.status === Status.OPEN).length;
-        const urgentRequests = requests.filter(r =>
-            r.status === Status.OPEN &&
-            (r.urgency === Urgency.URGENT || r.urgency === Urgency.EMERGENCY)
+        const openRequests = requests.filter((r: RequestType) => r.status === 'OPEN').length;
+        const urgentRequests = requests.filter((r: RequestType) =>
+            r.status === 'OPEN' &&
+            (r.urgency === 'URGENT' || r.urgency === 'EMERGENCY')
         ).length;
 
-        const resolvedRequests = requests.filter(r => r.resolvedAt);
-        const totalTime = resolvedRequests.reduce((acc: number, req) => {
+        const resolvedRequests = requests.filter((r: RequestType) => r.resolvedAt);
+        const totalTime = resolvedRequests.reduce((acc: number, req: RequestType) => {
             const resolvedTime = new Date(req.resolvedAt!).getTime();
             const createdTime = new Date(req.createdAt).getTime();
             return acc + (resolvedTime - createdTime);
@@ -63,7 +59,8 @@ export class MaintenanceResolver {
             data: {
                 title: input.title,
                 description: input.description,
-                urgency: input.urgency
+                urgency: input.urgency || 'NONE_URGENT',
+                status: input.status || 'OPEN'
             }
         });
 
@@ -80,7 +77,7 @@ export class MaintenanceResolver {
         const updatedRequest = await prisma.maintenanceRequest.update({
             where: { id },
             data: {
-                status: Status.RESOLVED,
+                status: "RESOLVED",
                 resolvedAt: new Date()
             }
         });

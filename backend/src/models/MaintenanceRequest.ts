@@ -1,21 +1,13 @@
-import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
-import { PrismaClient, Status, Urgency } from '@prisma/client';
-import { MaintenanceRequest, Metrics } from './types';
+import { Resolver, Query, Mutation, Arg, Ctx } from "type-graphql";
+import { PrismaClient } from "../../prisma/generated/client";
+
+import { MaintenanceRequest, Metrics, RequestType } from "./types";
 
 type Context = {
     prisma: PrismaClient;
 };
 
-interface RequestType {
-    id: string;
-    title: string;
-    description: string;
-    status: 'OPEN' | 'RESOLVED';
-    urgency: 'NONE_URGENT' | 'LESS_URGENT' | 'URGENT' | 'EMERGENCY';
-    createdAt: Date;
-    resolvedAt: Date | null;
-    updatedAt: Date;
-}
+
 
 @Resolver()
 export class MaintenanceResolver {
@@ -60,14 +52,16 @@ export class MaintenanceResolver {
     async createRequest(
         @Arg('title') title: string,
         @Arg('description') description: string,
-        @Arg('urgency', () => Urgency) urgency: Urgency,
+        @Arg('urgency') urgency: string,
+        @Arg('status') status: string,
         @Ctx() { prisma }: Context
     ): Promise<MaintenanceRequest> {
         return prisma.maintenanceRequest.create({
             data: {
                 title,
                 description,
-                urgency: urgency as any
+                urgency: urgency as any,
+                status: status as any
             }
         });
     }
@@ -91,8 +85,8 @@ export class MaintenanceResolver {
         @Arg('id') id: string,
         @Arg('title') title: string,
         @Arg('description') description: string,
-        @Arg('urgency', () => Urgency) urgency: Urgency,
-        @Arg('status', () => Status) status: Status,
+        @Arg('urgency') urgency: string,
+        @Arg('status') status: string,
         @Ctx() { prisma }: Context
     ): Promise<MaintenanceRequest> {
         const data: any = {

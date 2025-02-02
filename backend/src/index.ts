@@ -3,9 +3,9 @@ import express, { Request, Response } from 'express';
 import { createServer } from 'http';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
+import { PrismaClient } from '../prisma/generated/client'
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import { buildSchema } from 'type-graphql';
-import { PrismaClient } from '@prisma/client';
 import { WebSocketServer } from 'ws';
 import { useServer } from 'graphql-ws/lib/use/ws';
 import { MaintenanceResolver } from './resolver/MaintenanceResolver';
@@ -13,6 +13,8 @@ import cors from 'cors';
 import { PubSub } from 'graphql-subscriptions';
 import { UrgencyService } from './services/UrgencyServices';
 import { Container } from 'typedi';
+
+
 
 interface Context {
     req: Request;
@@ -25,7 +27,7 @@ async function bootstrap() {
     const app = express();
     const httpServer = createServer(app);
 
-    const prisma = new PrismaClient();
+    const prisma = new PrismaClient()
     const pubsub = new PubSub();
 
     // Set up DI container

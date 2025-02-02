@@ -31,13 +31,15 @@ COPY package*.json ./
 COPY prisma ./prisma/
 
 # Install production dependencies
-RUN npm install --production
+RUN npm install
 
 # Copy built assets
 COPY . .
 
 # Generate Prisma client
 RUN npx prisma generate
+
+RUN npm run build
 
 # Start production server
 CMD ["npm", "start"]
