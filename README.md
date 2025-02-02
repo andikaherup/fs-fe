@@ -56,7 +56,7 @@ DB_USER=postgres
 DB_PASSWORD=postgres
 DB_NAME=maintenance_system
 
-#since docker config still have some bug please use this DATABASE_URL and use your own database
+#since docker config still have some bug please use this DATABASE_URL and use your own database configuration
 DATABASE_URL=postgresql://postgres:postgres@postgres:5432/maintenance_system
 
 
