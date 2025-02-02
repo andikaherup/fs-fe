@@ -104,7 +104,7 @@ export default function Home() {
       )}
 
       <button
-        onClick={() => setSelectedRequest({})}
+        onClick={() => setSelectedRequest}
         className="fixed bottom-6 right-6 w-12 h-12 bg-(--color-cendolgreen) text-white rounded-full flex items-center justify-center text-2xl shadow-lg hover:bg-green-600 transition-colors"
       >
         +

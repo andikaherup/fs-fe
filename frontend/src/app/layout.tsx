@@ -3,9 +3,6 @@
 import { ApolloProvider } from "@apollo/client";
 import apolloClient from "@/lib/apolloClient";
 import "@/app/globals.css";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({
   children,
@@ -14,7 +11,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className}  bg-(--color-backgroundgrey)`}>
+      <body className={`bg-(--color-backgroundgrey)`}>
         <ApolloProvider client={apolloClient}>{children}</ApolloProvider>
       </body>
     </html>
