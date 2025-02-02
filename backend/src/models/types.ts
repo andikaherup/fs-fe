@@ -47,6 +47,9 @@ export class CreateMaintenanceInput {
     @Field()
     description!: string;
 
+    @Field(() => Status)
+    status!: Status;
+
     @Field(() => Urgency)
     urgency!: Urgency;
 }

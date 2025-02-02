@@ -90,6 +90,22 @@ export class MaintenanceResolver {
         return updatedRequest;
     }
 
+    @Mutation(() => MaintenanceRequest)
+    async updateRequest(
+        @Arg('id') id: string,
+        @Arg('input') input: CreateMaintenanceInput,
+        @Ctx() { prisma }: Context
+    ): Promise<MaintenanceRequest> {
+        return prisma.maintenanceRequest.update({
+            where: { id },
+            data: {
+                title: input.title,
+                description: input.description,
+                urgency: input.urgency as any
+            }
+        });
+    }
+
     @Subscription(() => MaintenanceRequest, {
         topics: 'MAINTENANCE_UPDATED'
     })

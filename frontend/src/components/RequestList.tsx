@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 type UrgencyType = "NONE_URGENT" | "LESS_URGENT" | "URGENT" | "EMERGENCY";
 type StatusType = "OPEN" | "RESOLVED";
@@ -46,7 +46,11 @@ const UrgencyBadge = ({ urgency }: { urgency: UrgencyType }) => {
   );
 };
 
-export default function RequestList({ requests, onResolve }: RequestListProps) {
+export default function RequestList({
+  requests,
+  onEdit,
+  onResolve,
+}: RequestListProps) {
   return (
     <div className="space-y-4">
       {requests.map((request) => (
@@ -54,7 +58,10 @@ export default function RequestList({ requests, onResolve }: RequestListProps) {
           key={request.id}
           className="bg-white rounded-[12px] p-[16px] shadow-md"
         >
-          <div className="flex justify-between items-start">
+          <div
+            onClick={() => onEdit(request)}
+            className="flex justify-between items-start"
+          >
             <div>
               <h3 className="text-lg font-medium text-gray-900">
                 {request.title}
@@ -68,7 +75,7 @@ export default function RequestList({ requests, onResolve }: RequestListProps) {
             </div>
             <div className="text-right">
               <p className="text-sm text-(--color-graytext)">
-                {format(new Date(request.createdAt), "dd MMM yyyy")}
+                {format(parseISO(request.createdAt), "dd MMM yyyy")}
               </p>
               {request.status === "OPEN" ? (
                 <button

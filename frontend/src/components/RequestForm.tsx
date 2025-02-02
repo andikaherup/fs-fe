@@ -2,18 +2,21 @@ import { useState } from "react";
 import { CustomDropdown } from "./Dropdown";
 
 interface CreateRequestFormProps {
-  initialData?: {
-    id?: string;
-    title: string;
-    description: string;
-    urgency: string;
-  };
+  initialData?: FormDataType;
   onSubmit: (data: {
     title: string;
     description: string;
     urgency: string;
   }) => void;
   onClose: () => void;
+}
+
+interface FormDataType {
+  id?: string;
+  title: string;
+  description: string;
+  urgency: string;
+  status: string;
 }
 
 type DropdownOption = {
@@ -42,15 +45,22 @@ export default function CreateRequestForm({
     title: initialData?.title || "",
     description: initialData?.description || "",
     urgency: initialData?.urgency || "NONE_URGENT",
+    status: initialData?.status || "OPEN",
   });
 
   const isEditing = !!initialData;
 
-  const [selectedValue, setSelectedValue] = useState("EMERGENCY");
+  const isFormValid = () => {
+    return formData.title.trim() !== "" && formData.urgency !== "";
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
+  };
+
+  const handleDropdownChange = (field: string) => (value: string) => {
+    setFormData((prev: FormDataType) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -74,8 +84,8 @@ export default function CreateRequestForm({
             Urgency *
           </label>
           <CustomDropdown
-            value={selectedValue}
-            onChange={setSelectedValue}
+            value={formData.urgency}
+            onChange={handleDropdownChange("urgency")}
             options={urgencyOptions}
           />
         </div>
@@ -84,8 +94,8 @@ export default function CreateRequestForm({
             Status
           </label>
           <CustomDropdown
-            value={selectedValue}
-            onChange={setSelectedValue}
+            value={formData.status}
+            onChange={handleDropdownChange("status")}
             options={statusOptions}
           />
         </div>
