@@ -26,3 +26,11 @@ export interface Metrics {
     averageResolutionTime: number;
     urgentRequests: number;
 }
+
+export interface Request {
+    id?: string;
+    title: string;
+    description: string;
+    urgency: string;
+    status: string;
+}

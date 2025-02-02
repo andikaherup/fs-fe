@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Arg, Ctx } from 'type-graphql';
-import { PrismaClient } from '@prisma/client';
-import { MaintenanceRequest, Metrics, Status, Urgency } from './types';
+import { PrismaClient, Status, Urgency } from '@prisma/client';
+import { MaintenanceRequest, Metrics } from './types';
 
 type Context = {
     prisma: PrismaClient;
@@ -67,7 +67,7 @@ export class MaintenanceResolver {
             data: {
                 title,
                 description,
-                urgency: urgency as any // Type assertion to match Prisma's expected type
+                urgency: urgency as any
             }
         });
     }
@@ -83,6 +83,37 @@ export class MaintenanceResolver {
                 status: 'RESOLVED',
                 resolvedAt: new Date()
             }
+        });
+    }
+
+    @Mutation(() => MaintenanceRequest)
+    async updateRequest(
+        @Arg('id') id: string,
+        @Arg('title') title: string,
+        @Arg('description') description: string,
+        @Arg('urgency', () => Urgency) urgency: Urgency,
+        @Arg('status', () => Status) status: Status,
+        @Ctx() { prisma }: Context
+    ): Promise<MaintenanceRequest> {
+        const data: any = {
+            title,
+            description,
+            urgency,
+            status
+        };
+
+        // If changing back to OPEN, clear the resolvedAt date
+        if (status === 'OPEN') {
+            data.resolvedAt = null;
+        }
+        // If changing to RESOLVED, set the resolvedAt date
+        else if (status === 'RESOLVED') {
+            data.resolvedAt = new Date();
+        }
+
+        return prisma.maintenanceRequest.update({
+            where: { id },
+            data
         });
     }
 }

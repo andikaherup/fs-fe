@@ -1,5 +1,5 @@
 import { Resolver, Query, Mutation, Arg, Ctx, Subscription, Root } from 'type-graphql';
-import { MaintenanceRequest, Metrics, CreateMaintenanceInput } from '../models/types';
+import { MaintenanceRequest, Metrics, CreateMaintenanceInput, UpdateMaintenanceInput } from '../models/types';
 import { PrismaClient, Status, Urgency } from '@prisma/client';
 import { PubSub } from 'graphql-subscriptions';
 import { Service } from 'typedi';
@@ -93,25 +93,28 @@ export class MaintenanceResolver {
     @Mutation(() => MaintenanceRequest)
     async updateRequest(
         @Arg('id') id: string,
-        @Arg('input') input: CreateMaintenanceInput,
+        @Arg('input') input: UpdateMaintenanceInput,
         @Ctx() { prisma }: Context
     ): Promise<MaintenanceRequest> {
+        const data: any = {
+            title: input.title,
+            description: input.description,
+            urgency: input.urgency,
+            status: input.status
+        };
+
+        // If changing back to OPEN, clear the resolvedAt date
+        if (input.status === 'OPEN') {
+            data.resolvedAt = null;
+        }
+        // If changing to RESOLVED, set the resolvedAt date
+        else if (input.status === 'RESOLVED') {
+            data.resolvedAt = new Date();
+        }
+
         return prisma.maintenanceRequest.update({
             where: { id },
-            data: {
-                title: input.title,
-                description: input.description,
-                urgency: input.urgency as any
-            }
+            data
         });
-    }
-
-    @Subscription(() => MaintenanceRequest, {
-        topics: 'MAINTENANCE_UPDATED'
-    })
-    maintenanceUpdated(
-        @Root() payload: MaintenanceRequest
-    ): MaintenanceRequest {
-        return payload;
     }
 }

@@ -1,6 +1,8 @@
 import { ObjectType, Field, ID, registerEnumType, InputType } from 'type-graphql';
 import { Status, Urgency } from '@prisma/client';
 
+
+
 // Register the enums for GraphQL
 registerEnumType(Status, {
     name: 'Status',
@@ -40,6 +42,21 @@ export class MaintenanceRequest {
 }
 
 @InputType()
+export class UpdateMaintenanceInput {
+    @Field()
+    title!: string;
+
+    @Field()
+    description!: string;
+
+    @Field(() => Status)
+    status!: Status;
+
+    @Field(() => Urgency)
+    urgency!: Urgency;
+}
+
+@InputType()
 export class CreateMaintenanceInput {
     @Field()
     title!: string;
@@ -53,6 +70,8 @@ export class CreateMaintenanceInput {
     @Field(() => Urgency)
     urgency!: Urgency;
 }
+
+
 
 @ObjectType()
 export class Metrics {

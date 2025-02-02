@@ -12,13 +12,7 @@ import {
 import MetricsPanel from "@/components/MetricsPanel";
 import RequestList from "@/components/RequestList";
 import RequestForm from "@/components/RequestForm";
-
-interface Request {
-  id: string;
-  title: string;
-  description: string;
-  urgency: string;
-}
+import { Request } from "@/types/index";
 
 export default function Home() {
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null);
@@ -40,11 +34,7 @@ export default function Home() {
     refetchQueries: [GET_MAINTENANCE_REQUESTS, GET_METRICS],
   });
 
-  const handleSubmit = async (formData: {
-    title: string;
-    description: string;
-    urgency: string;
-  }) => {
+  const handleSubmit = async (formData: Request) => {
     try {
       if (selectedRequest?.id) {
         // Update existing request
@@ -52,7 +42,12 @@ export default function Home() {
         await updateRequest({
           variables: {
             id: selectedRequest.id,
-            input: formData,
+            input: {
+              title: formData.title,
+              description: formData.description,
+              urgency: formData.urgency,
+              status: formData.status,
+            },
           },
         });
       } else {

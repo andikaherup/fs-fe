@@ -59,7 +59,10 @@ export default function RequestList({
           className="bg-white rounded-[12px] p-[16px] shadow-md"
         >
           <div
-            onClick={() => onEdit(request)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(request);
+            }}
             className="flex justify-between items-start"
           >
             <div>

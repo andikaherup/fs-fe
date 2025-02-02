@@ -1,22 +1,11 @@
 import { useState } from "react";
 import { CustomDropdown } from "./Dropdown";
+import { Request } from "@/types/index";
 
 interface CreateRequestFormProps {
-  initialData?: FormDataType;
-  onSubmit: (data: {
-    title: string;
-    description: string;
-    urgency: string;
-  }) => void;
+  initialData?: Request;
+  onSubmit: (data: Request) => void;
   onClose: () => void;
-}
-
-interface FormDataType {
-  id?: string;
-  title: string;
-  description: string;
-  urgency: string;
-  status: string;
 }
 
 type DropdownOption = {
