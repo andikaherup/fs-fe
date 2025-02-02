@@ -152,6 +152,14 @@ const config = {
         "fromEnvVar": null,
         "value": "darwin-arm64",
         "native": true
+      },
+      {
+        "fromEnvVar": null,
+        "value": "linux-arm64-openssl-1.1.x"
+      },
+      {
+        "fromEnvVar": null,
+        "value": "darwin-arm64"
       }
     ],
     "previewFeatures": [],
@@ -178,8 +186,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./generated/client\"\n}\n\nmodel MaintenanceRequest {\n  id          String    @id @default(uuid())\n  title       String\n  description String\n  status      Status    @default(OPEN)\n  urgency     Urgency   @default(NONE_URGENT)\n  createdAt   DateTime  @default(now())\n  resolvedAt  DateTime?\n  updatedAt   DateTime  @updatedAt\n\n  @@index([status])\n  @@index([urgency])\n}\n\nenum Status {\n  OPEN\n  RESOLVED\n}\n\nenum Urgency {\n  NONE_URGENT\n  LESS_URGENT\n  URGENT\n  EMERGENCY\n}\n",
-  "inlineSchemaHash": "842348b69ada99097280aa8b7a184331715e2a912c4ce0bfce52c462188f1af7",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\ngenerator client {\n  provider      = \"prisma-client-js\"\n  binaryTargets = [\"native\", \"linux-arm64-openssl-1.1.x\", \"darwin-arm64\"]\n  output        = \"./generated/client\"\n}\n\nmodel MaintenanceRequest {\n  id          String    @id @default(uuid())\n  title       String\n  description String\n  status      Status    @default(OPEN)\n  urgency     Urgency   @default(NONE_URGENT)\n  createdAt   DateTime  @default(now())\n  resolvedAt  DateTime?\n  updatedAt   DateTime  @updatedAt\n\n  @@index([status])\n  @@index([urgency])\n}\n\nenum Status {\n  OPEN\n  RESOLVED\n}\n\nenum Urgency {\n  NONE_URGENT\n  LESS_URGENT\n  URGENT\n  EMERGENCY\n}\n",
+  "inlineSchemaHash": "da9c841589a0cb62387a965bb045afbf90b6b3d029d64e3b762a3fe22bcfba4c",
   "copyEngine": true
 }
 
@@ -220,6 +228,10 @@ Object.assign(exports, Prisma)
 // file annotations for bundling tools to include these files
 path.join(__dirname, "libquery_engine-darwin-arm64.dylib.node");
 path.join(process.cwd(), "prisma/generated/client/libquery_engine-darwin-arm64.dylib.node")
+
+// file annotations for bundling tools to include these files
+path.join(__dirname, "libquery_engine-linux-arm64-openssl-1.1.x.so.node");
+path.join(process.cwd(), "prisma/generated/client/libquery_engine-linux-arm64-openssl-1.1.x.so.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "prisma/generated/client/schema.prisma")

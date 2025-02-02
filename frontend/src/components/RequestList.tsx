@@ -58,14 +58,11 @@ export default function RequestList({
           key={request.id}
           className="bg-white rounded-[12px] p-[16px] shadow-md"
         >
-          <div
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(request);
-            }}
-            className="flex justify-between items-start"
-          >
-            <div>
+          <div className="flex justify-between items-start">
+            <div
+              className="hover:cursor-pointer"
+              onClick={() => onEdit(request)}
+            >
               <h3 className="text-lg font-medium text-gray-900">
                 {request.title}
               </h3>

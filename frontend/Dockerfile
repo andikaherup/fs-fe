@@ -26,7 +26,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install production dependencies
-RUN npm install --production
+RUN npm install
 
 # Copy source code
 COPY . .
@@ -35,4 +35,4 @@ COPY . .
 RUN npm run build
 
 # Start production server
-CMD ["npm", "start"]
+CMD ["npm","run" ,"start"]

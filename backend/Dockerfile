@@ -1,7 +1,7 @@
 # backend/Dockerfile
 
 # Development Stage
-FROM node:18-alpine AS development
+FROM node:23-bullseye AS development
 
 WORKDIR /app
 
@@ -22,7 +22,7 @@ RUN npx prisma generate
 CMD ["npm", "run", "dev"]
 
 # Production Stage
-FROM node:18-alpine AS production
+FROM node:23-bullseye AS production
 
 WORKDIR /app
 
@@ -42,4 +42,4 @@ RUN npx prisma generate
 RUN npm run build
 
 # Start production server
-CMD ["npm", "start"]
+CMD ["npm","run", "start"]

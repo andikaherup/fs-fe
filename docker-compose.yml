@@ -6,9 +6,6 @@ services:
   postgres:
     image: postgres:14
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
       DATABASE_URL: ${DATABASE_URL}
 
     volumes:
@@ -23,7 +20,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@postgres:5432/${DB_NAME}
+      DATABASE_URL: ${DATABASE_URL}
       NODE_ENV: development
     ports:
       - "4000:4000"
