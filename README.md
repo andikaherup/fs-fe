@@ -48,6 +48,7 @@ cd maintenance-management
 
 2. Local Development test
 
+```bash
 # Backend
 
 cd backend
@@ -59,6 +60,8 @@ npm run dev
 cd frontend
 npm install
 npm run dev
+
+```
 
 Building for Production
 
