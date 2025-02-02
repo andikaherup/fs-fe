@@ -84,6 +84,7 @@ npm run build
 
 ## PROJECT STRUCTURE
 
+```bash
 maintenance-management/
 ├── backend/
 │ ├── src/
@@ -100,3 +101,4 @@ maintenance-management/
 │ │ └── pages/
 │ └── Dockerfile
 └── docker-compose.yml
+```
