@@ -46,7 +46,7 @@ git clone https://github.com/andikaherup/fs-fe
 cd maintenance-management
 ```
 
-2. Local Development test
+2. Add .env file
 
 ```bash
 .env example
@@ -66,8 +66,11 @@ PORT=4000
 
 # Frontend
 NEXT_PUBLIC_API_URL=http://localhost:4000/graphql
+```
 
+3. Local Development test
 
+```bash
 # Backend
 
 cd backend
