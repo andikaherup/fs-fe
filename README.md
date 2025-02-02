@@ -49,6 +49,25 @@ cd maintenance-management
 2. Local Development test
 
 ```bash
+.env example
+
+# Database ( this will be available soon in docker, or not )
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=maintenance_system
+
+#since docker config still have some bug please use this database URL
+DATABASE_URL=postgresql://postgres:postgres@postgres:5432/maintenance_system
+
+
+# Backend
+NODE_ENV=development
+PORT=4000
+
+# Frontend
+NEXT_PUBLIC_API_URL=http://localhost:4000/graphql
+
+
 # Backend
 
 cd backend
