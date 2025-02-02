@@ -14,8 +14,10 @@ RUN npm install
 # Copy source code
 COPY . .
 
+RUN npm run build
+
 # Start development server
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]
 
 # Production Stage
 FROM node:18-alpine AS production
