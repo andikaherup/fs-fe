@@ -40,7 +40,7 @@ export class MaintenanceResolver {
         }, 0);
 
         const averageResolutionTime = resolvedRequests.length
-            ? totalTime / resolvedRequests.length / (1000 * 60 * 60)
+            ? totalTime / resolvedRequests.length / (1000 * 60 * 60 * 24)
             : 0;
 
         return {
