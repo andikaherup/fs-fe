@@ -14,6 +14,7 @@ type DropdownOption = {
 };
 
 const urgencyOptions: DropdownOption[] = [
+  { value: "", label: "Select Urgency" },
   { value: "EMERGENCY", label: "Emergency" },
   { value: "URGENT", label: "Urgent" },
   { value: "LESS_URGENT", label: "Less Urgent" },
@@ -21,6 +22,7 @@ const urgencyOptions: DropdownOption[] = [
 ];
 
 const statusOptions: DropdownOption[] = [
+  { value: "", label: "Select Status" },
   { value: "OPEN", label: "Open" },
   { value: "RESOLVED", label: "Resolved" },
 ];
@@ -33,8 +35,8 @@ export default function CreateRequestForm({
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     description: initialData?.description || "",
-    urgency: initialData?.urgency || "NONE_URGENT",
-    status: initialData?.status || "OPEN",
+    urgency: initialData?.urgency || "",
+    status: initialData?.status || "",
   });
 
   const isEditing = !!initialData;
@@ -49,7 +51,7 @@ export default function CreateRequestForm({
   };
 
   const handleDropdownChange = (field: string) => (value: string) => {
-    setFormData((prev: FormDataType) => ({ ...prev, [field]: value }));
+    setFormData((prev: Request) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -96,6 +98,7 @@ export default function CreateRequestForm({
           <input
             type="text"
             value={formData.title}
+            placeholder="eg. Crack in plasterboard"
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
@@ -110,6 +113,7 @@ export default function CreateRequestForm({
           </label>
           <textarea
             value={formData.description}
+            placeholder="Description of your request"
             onChange={(e) =>
               setFormData({ ...formData, description: e.target.value })
             }
@@ -119,7 +123,12 @@ export default function CreateRequestForm({
         <div className="w-full flex justify-center">
           <button
             type="submit"
-            className="w-[40%] py-2 px-4 bg-(--color-cendolgreen) text-white text-lg rounded-md hover:bg-green-600 transition-colors"
+            className={`w-[40%] py-2 px-4 text-white text-lg rounded-md transition-colors ${
+              isFormValid()
+                ? "bg-(--color-cendolgreen) hover:bg-green-600"
+                : "bg-(--color-graytext) cursor-not-allowed"
+            }`}
+            disabled={!isFormValid()}
           >
             Save
           </button>

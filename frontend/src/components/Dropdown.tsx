@@ -25,12 +25,18 @@ export const CustomDropdown = ({
   return (
     <div className="relative ">
       <select
-        className="w-full h-[52px] px-4 py-[14px] bg-white font-light text-(--color-formtext) border border-[#FFFFFF80] rounded-[12px] appearance-none  focus:outline-none focus:border-gray-400"
+        className={`w-full h-[52px] px-4 py-[14px] bg-white font-light border border-[#FFFFFF80] rounded-[12px] appearance-none focus:outline-none focus:border-gray-400 ${
+          value === "" ? "text-(--color-graytext)" : "text-(--color-formtext)"
+        }`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option
+            key={option.value}
+            value={option.value}
+            disabled={option.value === ""}
+          >
             {option.label}
           </option>
         ))}
