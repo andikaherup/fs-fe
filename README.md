@@ -81,3 +81,22 @@ cd frontend
 npm run build
 
 ```
+
+## PROJECT STRUCTURE
+
+maintenance-management/
+├── backend/
+│ ├── src/
+│ │ ├── resolver/
+│ │ ├── services/
+│ │ └── types/
+│ ├── prisma/
+│ │ └── schema.prisma
+│ └── Dockerfile
+├── frontend/
+│ ├── src/
+│ │ ├── components/
+│ │ ├── graphql/
+│ │ └── pages/
+│ └── Dockerfile
+└── docker-compose.yml
