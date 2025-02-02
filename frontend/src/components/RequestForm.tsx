@@ -39,8 +39,6 @@ export default function CreateRequestForm({
     status: initialData?.status || "",
   });
 
-  const isEditing = !!initialData;
-
   const isFormValid = () => {
     return formData.title.trim() !== "" && formData.urgency !== "";
   };
@@ -65,7 +63,9 @@ export default function CreateRequestForm({
         </button>
         <h1 className="text-xl  font-bold">
           {" "}
-          {isEditing ? "Edit Maintenance Request" : "New Maintenance Request"}
+          {initialData?.id
+            ? "Edit Maintenance Request"
+            : "New Maintenance Request"}
         </h1>
       </div>
 
